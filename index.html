@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para o Meu Amor - Sob a Noite Estrelada</title>
+    <style>
+        :root {
+            --night-bg: #090e24;
+            --swirl-blue: #1c3b6e;
+            --star-yellow: #fcd34d;
+            --moon-gold: #fbbf24;
+            --text-light: #f3f4f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--night-bg);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Imagem de Fundo de Van Gogh */
+        .bg-painting {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.45;
+            z-index: 0;
+            filter: brightness(0.8) contrast(1.1);
+        }
+
+        /* Layer do Canvas para os efeitos de estrelas */
+        canvas#starry-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: var(--moon-gold);
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.8), 0 0 30px rgba(9, 14, 36, 0.9);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            color: #93c5fd;
+            font-style: italic;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .author-tag {
+            font-size: 0.95rem;
+            color: var(--star-yellow);
+            margin-top: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .letter-card {
+            background: rgba(9, 14, 36, 0.82);
+            backdrop-filter: blur(8px);
+            border: 2px solid rgba(251, 191, 36, 0.4);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+            margin-bottom: 50px;
+            width: 100%;
+            position: relative;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #090e24;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .copy-code-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
+        }
+
+        .letter-content {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #e2e8f0;
+            text-align: justify;
+        }
+
+        .letter-content p {
+            margin-bottom: 20px;
+        }
+
+        .signature {
+            font-size: 2rem;
+            color: var(--star-yellow);
+            text-align: right;
+            margin-top: 30px;
+            font-style: italic;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+        }
+
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .reason-card {
+            background: rgba(9, 14, 36, 0.82);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .reason-card h3 {
+            color: var(--star-yellow);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .reason-card p {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .subtitle { font-size: 1.4rem; }
+            .letter-card { padding: 25px; }
+            .copy-code-btn { position: static; margin-bottom: 15px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fundo com a Obra de Van Gogh -->
+    <div class="bg-painting"></div>
+
+    <!-- Efeito de Estrelas em Canvas -->
+    <canvas id="starry-canvas"></canvas>
+
+    <div class="container">
+        <header>
+            <h1>Para o Meu Amor</h1>
+            <div class="subtitle">Sob a Nossa Noite Estrelada</div>
+            <div class="author-tag">Criado com amor por João V. Tito</div>
+        </header>
+
+        <main class="letter-card">
+            <button class="copy-code-btn" onclick="copyLetterText(this)">
+                ✨ Copiar Texto da Carta
+            </button>
+            <div class="letter-content" id="letter-text">
+                <p>Se Van Gogh pudesse ver o brilho dos seus olhos, teria percebido que nenhuma tela no mundo conseguiria capturar tanta luz. Ele pintou o céu em turbilhões de azul e amarelo tentando expressar o infinito, mas o meu infinito mais bonito é simplesmente ter você ao meu lado.</p>
+                <p>Você é a minha noite estrelada favorita, a poesia viva em meio ao caos do mundo. Assim como cada estrela ilumina o céu escuro, cada sorriso seu transforma meus dias em algo mágico e inesquecível.</p>
+                <p>Obrigado por ser meu abrigo, meu amor e minha inspiração constante.</p>
+            </div>
+            <div class="signature">Um girassol para meu sol 🌻</div>
+        </main>
+
+        <section class="reasons-grid">
+            <div class="reason-card">
+                <h3>🌟 Seu Sorriso</h3>
+                <p>Ilumina até as noites mais escuras e traz paz ao meu coração.</p>
+            </div>
+            <div class="reason-card">
+                <h3>🌙 Seu Abraço</h3>
+                <p>É o meu lugar preferido no mundo inteiro, onde me sinto seguro.</p>
+            </div>
+            <div class="reason-card">
+                <h3>✨ Nossos Momentos</h3>
+                <p>Cada segundo com você se torna uma obra de arte inesquecível.</p>
+            </div>
+        </section>
+
+        <footer>
+            Criado por <strong>João V. Tito</strong> sob a inspiração de Vincent van Gogh ✨
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('starry-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let stars = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initStars();
+        }
+
+        function initStars() {
+            stars = [];
+            const count = Math.floor((width * height) / 2500);
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 2.5 + 0.5,
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.02 + 0.005,
+                    color: Math.random() > 0.3 ? '#fcd34d' : '#ffffff'
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+
+            stars.forEach(star => {
+                star.alpha += star.speed;
+                if (star.alpha > 1 || star.alpha < 0) {
+                    star.speed = -star.speed;
+                }
+
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = star.color;
+                ctx.globalAlpha = Math.abs(star.alpha);
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = star.color;
+                ctx.fill();
+            });
+
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        draw();
+
+        function copyLetterText(btn) {
+            const letter = document.getElementById('letter-text').innerText;
+            navigator.clipboard.writeText(letter).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = "✅ Copiado!";
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
